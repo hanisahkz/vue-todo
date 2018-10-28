@@ -4,8 +4,6 @@ new Vue({
     el: ".todoapp",
     data () {
         return {
-            //the data attributes and their default value as either '', [], null, 'all'
-            //these are the non-computed properties
             newTodoRecord: '',
             todos: [],
             editedTodo: null,
@@ -17,18 +15,14 @@ new Vue({
     },
     computed: {
       filteredTodos() {
-          //which is filter by 'all', 'completed', 'active'
-          //condition 1: what to return when visibility is 'all'
           if (this.visibility === 'all') {
               return this.todos;
           }
-          //condition 2: what to return when visibility is 'completed'
           else if (this.visibility === 'active') {
               return this.todos.filter(function (todo) {
                   return !todo.completed;
               })
           }
-          //condition 3: what to return when visibility is 'active'
           else {
               return this.todos.filter(function (todo) {
                   return todo.completed;
