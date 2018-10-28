@@ -1,35 +1,64 @@
+const TODO_DB = 'todo-records';
+
 new Vue({
-    //target main class wrapper
     el: ".todoapp",
-    //where data gets defined with its attributes
     data () {
         return {
-            //a "newTodo" object. The individual "todo" record that gets added to the whole todos
             newTodoRecord: '',
-            //a "todos" object which has to be any array later on
-            todos: [{
-                id: 0,
-                title: "Some title",
-                completed: 'false'
-            }]
+            todos: [],
+            editedTodo: null,
+            visibility: 'all'
         }
     },
+    created() {
+      this.todos = JSON.parse(localStorage.getItem(TODO_DB) || '[]');
+    },
+    computed: {
+      filteredTodos() {
+          if (this.visibility === 'all') {
+              return this.todos;
+          }
+          else if (this.visibility === 'active') {
+              return this.todos.filter(function (todo) {
+                  return !todo.completed;
+              })
+          }
+          else {
+              return this.todos.filter(function (todo) {
+                  return todo.completed;
+              })
+          }
+      }
+    },
     methods: {
-        //defining a function that will dynamically add to the array list of the todos object
-        addTodo() {
-            //in words: access this "todos" data and update the following property
+        createTodo() {
             this.todos.push({
                 id: this.todos.length,
                 title: this.newTodoRecord,
                 completed: false
             });
-            //after successfully entering a new record, clear the input
-            this.newTodoRecord = ''
+            this.newTodoRecord = '';
+            localStorage.setItem(TODO_DB, JSON.stringify(this.todos));
         },
-        removeTodo(todo) {
-            this.todos.splice(this.todos.indexOf(todo), 1)
+        deleteTodo(todo) {
+            this.todos.splice(this.todos.indexOf(todo), 1);
+            localStorage.setItem(TODO_DB, JSON.stringify(this.todos));
+        },
+        editTodo(todo) {
+            this.editedTodo = todo;
+        },
+        doneEdit(todo) {
+            if (!this.editedTodo) {
+                return
+            }
+            this.editedTodo = null;
+
+            todo.title = todo.title.trim();
+            if (!todo.title) {
+                this.deleteTodo(todo);
+            }
+
+            localStorage.setItem(TODO_DB, JSON.stringify(this.todos));
         }
-
-
     }
 });
