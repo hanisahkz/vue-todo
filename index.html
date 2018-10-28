@@ -25,8 +25,9 @@
       <ul class="todo-list">
         <!--observe ":class" to dynamically change class depending on whether todo == editedTodo evaluates to true-->
         <!--todo: define helper for :class-->
-        <li v-for="todo in todos"
-            :class="{editing: todo == editedTodo}">
+        <!--defining computed property for the array object todos-->
+        <li v-for="todo in filteredTodos"
+            :class="{completed: todo.completed, editing: todo == editedTodo}">
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
             <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
@@ -43,7 +44,15 @@
     <label for="toggle-all">Mark all as complete</label>
     <ul class="todo-list"></ul>
 
-    <footer class="footer"></footer>
+    <footer class="footer">
+      <ul class="filters">
+        <!--assign the class "selected" if the condition is met-->
+        <!--"visibility" is the computed property-->
+        <li><a href="#" @click.prevent="visibility='all'" :class="{ selected: visibility == 'all' }">All</a></li>
+        <li><a href="#" @click.prevent="visibility='active'" :class="{ selected: visibility == 'active' }">Active</a></li>
+        <li><a href="#" @click.prevent="visibility='completed'" :class="{selected: visibility == 'completed' }">Completed</a></li>
+      </ul>
+    </footer>
   </section>
 
   <footer class="info"></footer>
