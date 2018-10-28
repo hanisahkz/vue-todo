@@ -45,7 +45,9 @@ new Vue({
             localStorage.setItem(TODO_DB, JSON.stringify(this.todos));
         },
         editTodo(todo) {
-            this.editedTodo = todo;
+            if (!todo.completed) {
+                this.editedTodo = todo;
+            }
         },
         doneEdit(todo) {
             if (!this.editedTodo) {
